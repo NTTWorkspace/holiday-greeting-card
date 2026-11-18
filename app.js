@@ -238,25 +238,19 @@ window.handleSubmitRecipientName = function(e) {
   return false;
 };
 
-// Chuỗi chuyển động 3D mở thiệp (Toàn cục)
+// Chuỗi chuyển động mở thiệp (Mở trực tiếp, mượt mà và tráng lệ như bản đầu)
 function start3DOpeningSequence(name) {
   currentRecipientName = name;
 
   const stepInput = document.getElementById('step-input');
-  const stepEnvelope3D = document.getElementById('step-envelope-3d');
-  const envelopeBox = document.getElementById('envelope-box');
-  const envelopePreviewName = document.getElementById('envelope-preview-name');
   const stepCard = document.getElementById('step-card');
+  const cardElement = document.getElementById('greeting-card-content');
 
-  // 1. Ẩn form nhập tên
-  if (stepInput) stepInput.classList.add('hidden');
-
-  // Cập nhật tên vào thiệp nhỏ phong bì và thiệp lớn
-  if (envelopePreviewName) envelopePreviewName.textContent = name;
+  // 1. Cập nhật tên vào thiệp
   const cardNameEl = document.getElementById('card-recipient-name');
   if (cardNameEl) cardNameEl.textContent = name;
 
-  // Tìm lời chúc tương ứng
+  // 2. Tìm lời chúc tương ứng
   let wishText = "";
   let wishTitle = "Quý Ông Đích Thực";
   const matched = findWishByName(name);
@@ -275,29 +269,24 @@ function start3DOpeningSequence(name) {
   const titleTag = document.getElementById('card-title-tag');
   if (titleTag) titleTag.textContent = wishTitle;
 
-  // 2. Hiện phong bì 3D bay vào
-  if (stepEnvelope3D) stepEnvelope3D.classList.remove('hidden');
-  if (envelopeBox) envelopeBox.classList.remove('is-open');
+  // 3. Hiển thị lời chúc rõ ràng
+  render3DWishText(wishText);
 
-  // 3. Sau 700ms: Nắp phong bì lật mở 180 độ theo chiều 3D, thiệp nhỏ trượt lên
-  setTimeout(() => {
-    if (envelopeBox) envelopeBox.classList.add('is-open');
-    const statusText = document.getElementById('envelope-status-text');
-    if (statusText) statusText.textContent = "✨ Đang mở niêm phong thiệp vinh danh...";
-  }, 700);
+  // 4. Chuyển cảnh mở thiệp ngay lập tức
+  if (stepInput) stepInput.classList.add('hidden');
+  if (stepCard) stepCard.classList.remove('hidden');
 
-  // 4. Sau 2100ms: Tờ thiệp chính thức bung to toàn cảnh, hiển thị lời chúc và pháo hoa nổ
-  setTimeout(() => {
-    if (stepEnvelope3D) stepEnvelope3D.classList.add('hidden');
-    if (stepCard) stepCard.classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Kích hoạt lại animation mở thiệp 3D card-appear
+  if (cardElement) {
+    cardElement.classList.remove('card-appear');
+    void cardElement.offsetWidth; // Reflow
+    cardElement.classList.add('card-appear');
+  }
 
-    // Hiển thị lời chúc rõ ràng
-    render3DWishText(wishText);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Pháo hoa ăn mừng
-    triggerFestiveConfetti();
-  }, 2100);
+  // 5. Kích hoạt pháo hoa Confetti hoàng tráng
+  triggerFestiveConfetti();
 }
 
 document.addEventListener('DOMContentLoaded', () => {

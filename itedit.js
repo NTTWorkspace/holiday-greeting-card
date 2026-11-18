@@ -214,7 +214,7 @@ function renderWishes(searchTerm = '') {
         <p class="text-xs text-slate-300 mt-1.5 line-clamp-2 leading-relaxed">${item.wish}</p>
       </div>
       <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0 flex-wrap">
-        <button onclick="copyMemberLink('${encodeURIComponent(item.name)}')" class="text-xs bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg transition" title="Sao chép link gửi riêng">
+        <button onclick="copyMemberLink('${item.id}')" class="text-xs bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg transition" title="Sao chép link gửi riêng">
           📋 Copy Link
         </button>
         <a href="/?name=${encodeURIComponent(item.name)}" target="_blank" class="text-xs bg-emerald-600/80 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-lg transition" title="Mở thiệp của người này">
@@ -231,13 +231,19 @@ function renderWishes(searchTerm = '') {
   `).join('');
 }
 
-// Sao chép link gửi riêng cho từng người
-window.copyMemberLink = function(encodedName) {
-  const url = `${window.location.origin}/?name=${encodedName}`;
-  navigator.clipboard.writeText(url).then(() => {
-    alert(`Đã sao chép link gửi riêng!\n${url}\n\nBạn có thể gửi trực tiếp link này qua Zalo/Facebook cho người đó.`);
+// Sao chép link gửi riêng cho từng người (chứa trọn vẹn data)
+window.copyMemberLink = function(id) {
+  const item = wishesList.find(w => w.id === id);
+  if (!item) return;
+  const baseUrl = window.location.origin;
+  const encodedName = encodeURIComponent(item.name);
+  const encodedTitle = encodeURIComponent(item.title || '');
+  const encodedWish = encodeURIComponent(item.wish || '');
+  const fullUrl = `${baseUrl}/?name=${encodedName}&title=${encodedTitle}&wish=${encodedWish}`;
+  navigator.clipboard.writeText(fullUrl).then(() => {
+    alert(`Đã sao chép link gửi riêng cho "${item.name}"!\n\nLink đã chứa đầy đủ lời chúc cá nhân hóa. Người nhận mở ở bất kỳ thiết bị nào (điện thoại, máy tính) đều xem được ngay lập tức!`);
   }).catch(() => {
-    prompt("Link gửi riêng của người này:", url);
+    prompt("Link gửi riêng của người này:", fullUrl);
   });
 };
 

@@ -16,6 +16,14 @@ function normalizeString(str) {
     .trim();
 }
 
+// Bỏ tiền tố xưng hô như anh, em, chú, bác, sếp, mr... để so khớp chuẩn xác
+function cleanNameForMatching(str) {
+  if (!str) return '';
+  let s = normalizeString(str);
+  s = s.replace(/^(anh|em|chu|bac|ong|mr|sep|dong chi)\s+/i, '');
+  return s.trim();
+}
+
 // Tải danh sách lời chúc từ Server hoặc Storage
 async function loadWishesFromServer() {
   // 1. Kiểm tra LocalStorage nếu có
@@ -49,32 +57,49 @@ async function loadWishesFromServer() {
 // Tìm lời chúc theo tên (Thuật toán so khớp thông minh)
 function findWishByName(inputName) {
   if (!inputName) return null;
-  const normInput = normalizeString(inputName);
-  
-  // 1. So khớp chính xác hoặc theo từ khóa đã cài đặt
+  const rawClean = cleanNameForMatching(inputName);
+  const rawNorm = normalizeString(inputName);
+
+  // 1. So khớp chính xác họ tên
   for (const item of customWishes) {
-    const normItemName = normalizeString(item.name);
-    if (normItemName === normInput) {
+    const itemNorm = normalizeString(item.name);
+    const itemClean = cleanNameForMatching(item.name);
+    if (rawNorm === itemNorm || rawClean === itemClean) {
       return item;
     }
+  }
+
+  // 2. So khớp theo keywords
+  for (const item of customWishes) {
     if (item.keywords && Array.isArray(item.keywords)) {
       for (const kw of item.keywords) {
         const normKw = normalizeString(kw);
-        if (normInput.includes(normKw) || normKw.includes(normInput)) {
+        const cleanKw = cleanNameForMatching(kw);
+        if (rawNorm === normKw || rawClean === cleanKw || rawNorm.includes(normKw) || rawClean.includes(cleanKw)) {
           return item;
         }
       }
     }
   }
 
-  // 2. So khớp theo tên gọi chính (ví dụ: gõ "Vinh", "Lê Vinh" đều khớp "Nguyễn Lê Vinh")
-  const parts = normInput.split(/\s+/);
+  // 3. So khớp theo tên gọi chính (Ví dụ: gõ "Vinh", "Thành", "Huy", "Long" đều khớp đúng)
+  const parts = rawClean.split(/\s+/);
   const lastName = parts[parts.length - 1];
   if (lastName && lastName.length >= 2) {
     for (const item of customWishes) {
-      const itemParts = normalizeString(item.name).split(/\s+/);
+      const itemParts = cleanNameForMatching(item.name).split(/\s+/);
       const itemLastName = itemParts[itemParts.length - 1];
       if (itemLastName === lastName) {
+        return item;
+      }
+    }
+  }
+
+  // 4. So khớp nếu tên nhập chứa tên thành viên hoặc ngược lại
+  for (const item of customWishes) {
+    const itemClean = cleanNameForMatching(item.name);
+    if (rawClean.length >= 4 && itemClean.length >= 4) {
+      if (rawClean.includes(itemClean) || itemClean.includes(rawClean)) {
         return item;
       }
     }
@@ -317,10 +342,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('name-form');
   const inputName = document.getElementById('recipient-name-input');
 
-  // Kiểm tra URL Params nếu có ?name=...
+  // Kiểm tra URL Params nếu có ?name=... (hỗ trợ kèm cả ?wish=... & ?title=...)
   const urlParams = new URLSearchParams(window.location.search);
   const paramName = urlParams.get('name');
+  const paramWish = urlParams.get('wish');
+  const paramTitle = urlParams.get('title');
+
   if (paramName) {
+    if (paramWish) {
+      customWishes.unshift({
+        id: 'url_param_' + Date.now(),
+        name: paramName,
+        title: paramTitle || 'Quý Ông Đích Thực',
+        wish: decodeURIComponent(paramWish),
+        keywords: [paramName.toLowerCase()]
+      });
+    }
+
     if (inputName) inputName.value = paramName;
     setTimeout(() => {
       start3DOpeningSequence(paramName);
@@ -451,7 +489,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="text-[11px] text-slate-300 truncate mt-0.5">${item.wish}</p>
         </div>
         <div class="flex items-center gap-1 shrink-0">
-          <button onclick="copyMemberLink('${encodeURIComponent(item.name)}')" class="text-[11px] bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded" title="Sao chép link gửi riêng">
+          <button onclick="copyMemberLink(${idx})" class="text-[11px] bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded" title="Sao chép link gửi riêng">
             📋 Copy Link
           </button>
           <button onclick="editSecretWish(${idx})" class="text-[11px] bg-amber-600 hover:bg-amber-500 text-white px-2 py-1 rounded">
@@ -537,13 +575,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.copyMemberLink = function(encodedName) {
+  window.copyMemberLink = function(idx) {
+    const item = customWishes[idx];
+    if (!item) return;
     const baseUrl = window.location.href.split('?')[0].split('#')[0];
-    const url = `${baseUrl}?name=${encodedName}`;
-    navigator.clipboard.writeText(url).then(() => {
-      alert(`Đã sao chép link gửi riêng!\n${url}\n\nBạn có thể gửi trực tiếp link này cho người nhận.`);
+    const encodedName = encodeURIComponent(item.name);
+    const encodedTitle = encodeURIComponent(item.title || '');
+    const encodedWish = encodeURIComponent(item.wish || '');
+    const fullUrl = `${baseUrl}?name=${encodedName}&title=${encodedTitle}&wish=${encodedWish}`;
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      alert(`Đã sao chép link gửi riêng cho ${item.name}!\n\nLink này đã đóng gói sẵn lời chúc, người nhận mở trên điện thoại hay máy tính đều thấy chính xác 100%!`);
     }).catch(() => {
-      prompt("Link gửi riêng của người này:", url);
+      prompt("Link gửi riêng của người này:", fullUrl);
     });
   };
 

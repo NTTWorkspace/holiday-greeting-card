@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -56,23 +56,30 @@
         Một ngày đặc biệt dành riêng cho phái mạnh! Hãy nhập họ và tên của bạn để mở bức thiệp vinh danh được thiết kế riêng.
       </p>
 
-      <!-- Form nhập tên -->
-      <form id="name-form" class="space-y-4">
+      <!-- Form nhập tên (Tuyệt đối không reload trang) -->
+      <form id="name-form" class="space-y-4" onsubmit="event.preventDefault(); window.handleSubmitRecipientName(event); return false;">
         <div class="relative">
           <input 
             type="text" 
             id="recipient-name-input" 
             required
             autocomplete="off"
+            onkeydown="if(event.key === 'Enter') { event.preventDefault(); window.handleSubmitRecipientName(event); }"
             placeholder="Nhập họ và tên của bạn (Ví dụ: Nguyễn Văn Thành)..." 
             class="w-full px-5 py-3.5 bg-slate-900/90 border border-amber-500/40 rounded-xl text-amber-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-center font-medium text-base transition shadow-inner"
           />
         </div>
 
         <button 
-          type="submit" 
+          type="button" 
           id="btn-submit-name"
+          onclick="window.handleSubmitRecipientName(event)"
           class="w-full py-3.5 px-6 rounded-xl btn-gold text-base tracking-wide flex items-center justify-center space-x-2"
+        >
+          <span>Mở Thiệp & Nhận Lời Chúc (Enter ↵)</span>
+          <span class="text-lg">✨</span>
+        </button>
+      </form>
         >
           <span>Mở Thiệp & Nhận Lời Chúc (Enter ↵)</span>
           <span class="text-lg">✨</span>

@@ -221,88 +221,110 @@ function init3DCardTilt() {
 
 let currentRecipientName = "";
 
-document.addEventListener('DOMContentLoaded', async () => {
-  initBackgroundParticles();
-  await loadWishesFromServer();
-  init3DCardTilt();
-
-  const form = document.getElementById('name-form');
+// Hàm kích hoạt mở thiệp 3D (Toàn cục - Không bao giờ reload trang)
+window.handleSubmitRecipientName = function(e) {
+  if (e) {
+    if (e.preventDefault) e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+  }
   const inputName = document.getElementById('recipient-name-input');
+  if (!inputName) return false;
+  const name = inputName.value.trim();
+  if (!name) {
+    inputName.focus();
+    return false;
+  }
+  start3DOpeningSequence(name);
+  return false;
+};
+
+// Chuỗi chuyển động 3D mở thiệp (Toàn cục)
+function start3DOpeningSequence(name) {
+  currentRecipientName = name;
+
   const stepInput = document.getElementById('step-input');
   const stepEnvelope3D = document.getElementById('step-envelope-3d');
   const envelopeBox = document.getElementById('envelope-box');
   const envelopePreviewName = document.getElementById('envelope-preview-name');
   const stepCard = document.getElementById('step-card');
 
+  // 1. Ẩn form nhập tên
+  if (stepInput) stepInput.classList.add('hidden');
+
+  // Cập nhật tên vào thiệp nhỏ phong bì và thiệp lớn
+  if (envelopePreviewName) envelopePreviewName.textContent = name;
+  const cardNameEl = document.getElementById('card-recipient-name');
+  if (cardNameEl) cardNameEl.textContent = name;
+
+  // Tìm lời chúc tương ứng
+  let wishText = "";
+  let wishTitle = "Quý Ông Đích Thực";
+  const matched = findWishByName(name);
+  if (matched) {
+    wishTitle = matched.title || "Quý Ông Đích Thực";
+    wishText = matched.wish;
+  } else {
+    // Tự động chèn tên người nhận vào lời chúc mẫu để luôn mang tính cá nhân hóa tương ứng
+    const nameParts = name.trim().split(/\s+/);
+    const shortName = nameParts[nameParts.length - 1];
+    const randomItem = defaultWishPool[Math.floor(Math.random() * defaultWishPool.length)];
+    wishTitle = randomItem.title;
+    wishText = randomItem.wish.replace(/bạn/g, `anh ${shortName}`);
+  }
+
+  const titleTag = document.getElementById('card-title-tag');
+  if (titleTag) titleTag.textContent = wishTitle;
+
+  // 2. Hiện phong bì 3D bay vào
+  if (stepEnvelope3D) stepEnvelope3D.classList.remove('hidden');
+  if (envelopeBox) envelopeBox.classList.remove('is-open');
+
+  // 3. Sau 700ms: Nắp phong bì lật mở 180 độ theo chiều 3D, thiệp nhỏ trượt lên
+  setTimeout(() => {
+    if (envelopeBox) envelopeBox.classList.add('is-open');
+    const statusText = document.getElementById('envelope-status-text');
+    if (statusText) statusText.textContent = "✨ Đang mở niêm phong thiệp vinh danh...";
+  }, 700);
+
+  // 4. Sau 2100ms: Tờ thiệp chính thức bung to toàn cảnh, hiển thị lời chúc và pháo hoa nổ
+  setTimeout(() => {
+    if (stepEnvelope3D) stepEnvelope3D.classList.add('hidden');
+    if (stepCard) stepCard.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Hiển thị lời chúc rõ ràng
+    render3DWishText(wishText);
+
+    // Pháo hoa ăn mừng
+    triggerFestiveConfetti();
+  }, 2100);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initBackgroundParticles();
+  init3DCardTilt();
+  loadWishesFromServer();
+
+  const form = document.getElementById('name-form');
+  const inputName = document.getElementById('recipient-name-input');
+
   // Kiểm tra URL Params nếu có ?name=...
   const urlParams = new URLSearchParams(window.location.search);
   const paramName = urlParams.get('name');
   if (paramName) {
-    inputName.value = paramName;
+    if (inputName) inputName.value = paramName;
     setTimeout(() => {
       start3DOpeningSequence(paramName);
     }, 400);
   }
 
-  // Khi người nhận submit tên (Bấm Enter hoặc Click nút)
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = inputName.value.trim();
-    if (!name) return;
-    start3DOpeningSequence(name);
-  });
-
-  // Chuỗi chuyển động 3D mở thiệp
-  function start3DOpeningSequence(name) {
-    currentRecipientName = name;
-
-    // 1. Ẩn form nhập tên
-    stepInput.classList.add('hidden');
-
-    // Cập nhật tên vào thiệp nhỏ phong bì và thiệp lớn
-    envelopePreviewName.textContent = name;
-    document.getElementById('card-recipient-name').textContent = name;
-
-    // Tìm lời chúc tương ứng
-    let wishText = "";
-    let wishTitle = "Quý Ông Đích Thực";
-    const matched = findWishByName(name);
-    if (matched) {
-      wishTitle = matched.title || "Quý Ông Đích Thực";
-      wishText = matched.wish;
-    } else {
-      // Tự động chèn tên người nhận vào lời chúc mẫu để luôn mang tính cá nhân hóa tương ứng
-      const nameParts = name.trim().split(/\s+/);
-      const shortName = nameParts[nameParts.length - 1];
-      const randomItem = defaultWishPool[Math.floor(Math.random() * defaultWishPool.length)];
-      wishTitle = randomItem.title;
-      wishText = randomItem.wish.replace(/bạn/g, `anh ${shortName}`);
-    }
-
-    document.getElementById('card-title-tag').textContent = wishTitle;
-
-    // 2. Hiện phong bì 3D bay vào
-    stepEnvelope3D.classList.remove('hidden');
-    envelopeBox.classList.remove('is-open');
-
-    // 3. Sau 700ms: Nắp phong bì lật mở 180 độ theo chiều 3D, thiệp nhỏ trượt lên
-    setTimeout(() => {
-      envelopeBox.classList.add('is-open');
-      document.getElementById('envelope-status-text').textContent = "✨ Đang mở niêm phong thiệp vinh danh...";
-    }, 700);
-
-    // 4. Sau 2100ms: Tờ thiệp chính thức bung to toàn cảnh, lời chúc 3D bay vào và pháo hoa nổ
-    setTimeout(() => {
-      stepEnvelope3D.classList.add('hidden');
-      stepCard.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Kích hoạt hiệu ứng từng từ bay 3D
-      render3DWishText(wishText);
-
-      // Pháo hoa ăn mừng
-      triggerFestiveConfetti();
-    }, 2100);
+  // Khi form submit (phòng hờ)
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      window.handleSubmitRecipientName(e);
+      return false;
+    });
   }
 
   // Tải ảnh thiệp PNG sắc nét

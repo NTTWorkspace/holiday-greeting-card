@@ -17,7 +17,7 @@ Dự án web biểu diễn thiệp chúc mừng 19/11 với **đường dẫn ri
 ---
 
 ### 2. Đường dẫn bí mật dành riêng cho Quản Trị Viên (Admin):
-👉 **`http://localhost:3000/admin`**
+👉 **`http://localhost:3000/itedit`** *(hoặc `https://holiday-greeting-card.vercel.app/itedit`)*
 
 * **Tài khoản đăng nhập**:
   * **Tên đăng nhập**: `admin`

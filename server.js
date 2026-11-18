@@ -232,8 +232,8 @@ const server = http.createServer(async (req, res) => {
 
   // ===== ĐƯỜNG DẪN TRANG WEB =====
 
-  // Đường dẫn riêng cho Admin: /admin hoặc /admin/
-  if (urlPath === '/admin' || urlPath === '/admin/') {
+  // Đường dẫn bí mật cho Admin: /itedit hoặc /admin
+  if (urlPath === '/itedit' || urlPath === '/itedit/' || urlPath === '/admin' || urlPath === '/admin/') {
     const adminFilePath = path.join(__dirname, 'admin.html');
     return fs.readFile(adminFilePath, (err, content) => {
       if (err) {
@@ -267,6 +267,6 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`Web thiệp người nhận (Link chung gửi mọi người): http://localhost:${PORT}`);
-  console.log(`Đường dẫn riêng cho Admin (Quản trị viên): http://localhost:${PORT}/admin`);
+  console.log(`Đường dẫn riêng cho Admin: http://localhost:${PORT}/itedit`);
   console.log(`Tài khoản Admin: username = admin, password = admin123`);
 });

@@ -1,16 +1,11 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/itedit", "destination": "/itedit.html" },
-    { "source": "/api/wishes", "destination": "/data/wishes.json" }
-  ],
   "headers": [
     {
-      "source": "/data/wishes.json",
+      "source": "/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Content-Type", "value": "application/json; charset=utf-8" }
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     }
   ]

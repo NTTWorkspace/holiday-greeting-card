@@ -352,6 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
       downloadBtn.innerHTML = originalText;
       downloadBtn.disabled = false;
     }
+  });
+
   // ===== LOGIC QUẢN TRỊ BÍ MẬT KHI TRUY CẬP #itedit =====
   const secretModal = document.getElementById('secret-itedit-modal');
   const secretLoginView = document.getElementById('secret-login-view');

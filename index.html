@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Má»«ng NgÃ y Quá»‘c Táº¿ Nam Giá»›i 19/11 | International Men's Day</title>
+  <title>Mừng Ngày Quốc Tế Nam Giới 19/11 | International Men's Day</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,52 +11,52 @@
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   
-  <!-- HTML2Canvas Ä‘á»ƒ táº£i áº£nh thiá»‡p -->
+  <!-- HTML2Canvas để tải ảnh thiệp -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <!-- Custom Styles (Hiá»‡u á»©ng 3D Parallax & Lá»i ChÃºc 3D) -->
+  <!-- Custom Styles (Hiệu ứng 3D Parallax & Lời Chúc 3D) -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="flex flex-col justify-between min-h-screen relative px-4 py-6 sm:px-6 lg:px-8">
 
-  <!-- Background Canvas cho hiá»‡u á»©ng bá»¥i sao vÃ ng -->
+  <!-- Background Canvas cho hiệu ứng bụi sao vàng -->
   <canvas id="particle-canvas"></canvas>
 
-  <!-- HEADER DÃ€NH CHO NGÆ¯á»œI NHáº¬N -->
+  <!-- HEADER DÀNH CHO NGƯỜI NHẬN -->
   <header class="w-full max-w-4xl mx-auto flex justify-between items-center z-10 py-2">
     <div class="flex items-center space-x-2">
-      <span class="text-2xl">ðŸŽ©</span>
+      <span class="text-2xl">🎩</span>
       <span class="font-cinzel text-xs sm:text-sm tracking-widest uppercase text-amber-300 font-bold">
         Men's Day 19.11
       </span>
     </div>
     <div class="text-[11px] text-amber-400/70 border border-amber-500/20 px-3 py-1 rounded-full bg-slate-900/40">
-      â˜… TÃ´n Vinh PhÃ¡i Máº¡nh
+      ★ Tôn Vinh Phái Mạnh
     </div>
   </header>
 
-  <!-- Ná»˜I DUNG CHÃNH -->
+  <!-- NỘI DUNG CHÍNH -->
   <main class="w-full max-w-xl mx-auto my-auto z-10 py-6">
 
-    <!-- BÆ¯á»šC 1: MÃ€N HÃŒNH TIáº¾P ÄÃ“N & NHáº¬P TÃŠN -->
+    <!-- BƯỚC 1: MÀN HÌNH TIẾP ĐÓN & NHẬP TÊN -->
     <div id="step-input" class="card-luxury p-8 sm:p-10 rounded-2xl text-center relative border-gold-glow">
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 mb-5 shadow-lg">
-        <span class="text-3xl">ðŸ‘‘</span>
+        <span class="text-3xl">👑</span>
       </div>
 
       <p class="text-xs uppercase tracking-widest text-amber-400 font-cinzel font-semibold mb-2">
-        International Men's Day â€¢ 19 ThÃ¡ng 11
+        International Men's Day • 19 Tháng 11
       </p>
       
       <h1 class="text-2xl sm:text-3xl font-bold font-serif-luxury text-gold-shimmer mb-3 leading-snug">
-        ThÃ´ng Äiá»‡p Tri Ã‚n QuÃ½ Ã”ng
+        Thông Điệp Tri Ân Quý Ông
       </h1>
 
       <p class="text-slate-300 text-sm sm:text-base mb-8 max-w-md mx-auto leading-relaxed">
-        Má»™t ngÃ y Ä‘áº·c biá»‡t dÃ nh riÃªng cho phÃ¡i máº¡nh! HÃ£y nháº­p há» vÃ  tÃªn cá»§a báº¡n Ä‘á»ƒ má»Ÿ bá»©c thiá»‡p vinh danh Ä‘Æ°á»£c thiáº¿t káº¿ riÃªng.
+        Một ngày đặc biệt dành riêng cho phái mạnh! Hãy nhập họ và tên của bạn để mở bức thiệp vinh danh được thiết kế riêng.
       </p>
 
-      <!-- Form nháº­p tÃªn -->
+      <!-- Form nhập tên -->
       <form id="name-form" class="space-y-4">
         <div class="relative">
           <input 
@@ -64,7 +64,7 @@
             id="recipient-name-input" 
             required
             autocomplete="off"
-            placeholder="Nháº­p há» vÃ  tÃªn cá»§a báº¡n (VÃ­ dá»¥: Nguyá»…n VÄƒn ThÃ nh)..." 
+            placeholder="Nhập họ và tên của bạn (Ví dụ: Nguyễn Văn Thành)..." 
             class="w-full px-5 py-3.5 bg-slate-900/90 border border-amber-500/40 rounded-xl text-amber-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-center font-medium text-base transition shadow-inner"
           />
         </div>
@@ -74,46 +74,46 @@
           id="btn-submit-name"
           class="w-full py-3.5 px-6 rounded-xl btn-gold text-base tracking-wide flex items-center justify-center space-x-2"
         >
-          <span>Má»Ÿ Thiá»‡p & Nháº­n Lá»i ChÃºc (Enter â†µ)</span>
-          <span class="text-lg">âœ¨</span>
+          <span>Mở Thiệp & Nhận Lời Chúc (Enter ↵)</span>
+          <span class="text-lg">✨</span>
         </button>
       </form>
 
       <p class="text-xs text-slate-400 mt-6 italic">
-        ðŸ’¡ Báº¡n chá»‰ cáº§n Ä‘iá»n Ä‘Ãºng há» vÃ  tÃªn rá»“i áº¥n Enter Ä‘á»ƒ nháº­n mÃ³n quÃ  báº¥t ngá»!
+        💡 Bạn chỉ cần điền đúng họ và tên rồi ấn Enter để nhận món quà bất ngờ!
       </p>
     </div>
 
-    <!-- BÆ¯á»šC 1.5: MÃ€N DIá»„N HOáº T PHONG BÃŒ 3D (XUáº¤T HIá»†N KHI áº¤N ENTER) -->
+    <!-- BƯỚC 1.5: MÀN DIỄN HOẠT PHONG BÌ 3D (XUẤT HIỆN KHI ẤN ENTER) -->
     <div id="step-envelope-3d" class="hidden text-center py-10 perspective-1200">
       
       <p id="envelope-status-text" class="text-sm font-semibold text-amber-300 uppercase tracking-widest font-cinzel mb-8 animate-pulse">
-        âœ‰ï¸ Äang gá»­i trao thÆ° chÃºc má»«ng Ä‘áº·c biá»‡t...
+        ✉️ Đang gửi trao thư chúc mừng đặc biệt...
       </p>
 
-      <!-- Phong bÃ¬ 3D -->
+      <!-- Phong bì 3D -->
       <div id="envelope-box" class="envelope-3d-box">
         
-        <!-- Náº¯p phong bÃ¬ 3D láº­t má»Ÿ -->
+        <!-- Nắp phong bì 3D lật mở -->
         <div class="envelope-flap">
           <div class="envelope-seal shadow-2xl">
-            ðŸ‘‘
+            👑
           </div>
         </div>
 
-        <!-- Tá» thiá»‡p bÃªn trong chuáº©n bá»‹ trÆ°á»£t lÃªn -->
+        <!-- Tờ thiệp bên trong chuẩn bị trượt lên -->
         <div class="envelope-inner-card flex flex-col items-center justify-center p-4 text-center">
           <span class="text-xs text-amber-400 font-cinzel font-bold">MEN'S DAY 19/11</span>
-          <span id="envelope-preview-name" class="text-sm font-bold text-white mt-1">Há» VÃ  TÃªn</span>
-          <span class="text-[10px] text-amber-300/80 mt-0.5">âšœï¸ QuÃ½ Ã”ng ÄÃ­ch Thá»±c âšœï¸</span>
+          <span id="envelope-preview-name" class="text-sm font-bold text-white mt-1">Họ Và Tên</span>
+          <span class="text-[10px] text-amber-300/80 mt-0.5">⚜️ Quý Ông Đích Thực ⚜️</span>
         </div>
 
-        <!-- ThÃ¢n tÃºi phong bÃ¬ -->
+        <!-- Thân túi phong bì -->
         <div class="envelope-body flex flex-col justify-end p-4">
           <div class="envelope-pocket-pattern"></div>
           <div class="relative z-10 text-center">
             <span class="text-xs tracking-widest text-amber-400/90 font-cinzel uppercase font-bold">
-              â˜… FOR SPECIAL GENTLEMAN â˜…
+              ★ FOR SPECIAL GENTLEMAN ★
             </span>
           </div>
         </div>
@@ -122,80 +122,80 @@
 
     </div>
 
-    <!-- BÆ¯á»šC 2: MÃ€N HÃŒNH THIá»†P 3D & Lá»œI CHÃšC Láº¬P THá»‚ (BUNG Má»ž TOÃ€N Cáº¢NH) -->
+    <!-- BƯỚC 2: MÀN HÌNH THIỆP 3D & LỜI CHÚC LẬP THỂ (BUNG MỞ TOÀN CẢNH) -->
     <div id="step-card" class="hidden space-y-5">
       
-      <!-- KHUNG THIá»†P 3D PARALLAX & TÆ¯Æ NG TÃC CHUá»˜T (card-3d-interactive) -->
+      <!-- KHUNG THIỆP 3D PARALLAX & TƯƠNG TÁC CHUỘT (card-3d-interactive) -->
       <div id="greeting-card-content" class="card-luxury card-expanded-view card-3d-interactive p-8 sm:p-10 rounded-2xl relative border-gold-glow overflow-hidden select-none">
         
-        <!-- Lá»›p pháº£n chiáº¿u Ã¡nh sÃ¡ng 3D Glare -->
+        <!-- Lớp phản chiếu ánh sáng 3D Glare -->
         <div class="card-glare" id="card-glare"></div>
 
-        <!-- Há»a tiáº¿t gÃ³c thiá»‡p sang trá»ng -->
+        <!-- Họa tiết góc thiệp sang trọng -->
         <div class="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-amber-400/40 pointer-events-none"></div>
         <div class="absolute top-3 right-3 w-8 h-8 border-t-2 border-r-2 border-amber-400/40 pointer-events-none"></div>
         <div class="absolute bottom-3 left-3 w-8 h-8 border-b-2 border-l-2 border-amber-400/40 pointer-events-none"></div>
         <div class="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-amber-400/40 pointer-events-none"></div>
 
-        <!-- Header thiá»‡p (Táº§ng 3D depth-layer-2) -->
+        <!-- Header thiệp (Tầng 3D depth-layer-2) -->
         <div class="text-center relative pb-4 mb-4 border-b border-amber-500/20 depth-layer-2">
           <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-2">
-            â˜… SPECIAL TRIBUTE â€¢ 19/11/2026 â˜…
+            ★ SPECIAL TRIBUTE • 19/11/2026 ★
           </div>
           
           <h2 class="text-xs uppercase tracking-widest text-slate-400 font-cinzel">
-            TRÃ‚N TRá»ŒNG VINH DANH
+            TRÂN TRỌNG VINH DANH
           </h2>
 
-          <!-- TÃªn ngÆ°á»i nháº­n ná»•i báº­t táº§ng 3D cao nháº¥t (depth-layer-4) -->
+          <!-- Tên người nhận nổi bật tầng 3D cao nhất (depth-layer-4) -->
           <div class="my-2 depth-layer-4">
             <h1 id="card-recipient-name" class="text-3xl sm:text-4xl font-extrabold font-serif-luxury text-gold-3d tracking-tight">
-              Há» VÃ  TÃªn
+              Họ Và Tên
             </h1>
           </div>
 
-          <!-- Danh hiá»‡u trao táº·ng (depth-layer-3) -->
+          <!-- Danh hiệu trao tặng (depth-layer-3) -->
           <div class="inline-flex items-center space-x-1.5 mt-1 depth-layer-3">
-            <span class="text-amber-400">âšœï¸</span>
+            <span class="text-amber-400">⚜️</span>
             <span id="card-title-tag" class="text-sm font-semibold text-amber-300">
-              QuÃ½ Ã”ng ÄÃ­ch Thá»±c
+              Quý Ông Đích Thực
             </span>
-            <span class="text-amber-400">âšœï¸</span>
+            <span class="text-amber-400">⚜️</span>
           </div>
         </div>
 
-        <!-- KHUNG Lá»œI CHÃšC 3D Láº¬P THá»‚ (depth-layer-3 & wish-3d-container) -->
+        <!-- KHUNG LỜI CHÚC 3D LẬP THỂ (depth-layer-3 & wish-3d-container) -->
         <div class="py-5 px-4 text-center relative wish-3d-container depth-layer-3 my-2">
           <svg class="w-8 h-8 text-amber-500/30 mx-auto mb-2 depth-layer-1" fill="currentColor" viewBox="0 0 24 24">
             <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
           </svg>
           
-          <!-- Ná»™i dung lá»i chÃºc 3D Ä‘Æ°á»£c render Ä‘á»™ng tá»«ng chá»¯ bay ra -->
+          <!-- Nội dung lời chúc 3D được render động từng chữ bay ra -->
           <div id="card-wish-text" class="text-base sm:text-lg leading-relaxed font-normal px-2 sm:px-4">
-            <!-- Chá»¯ 3D xuáº¥t hiá»‡n qua JS -->
+            <!-- Chữ 3D xuất hiện qua JS -->
           </div>
         </div>
 
-        <!-- Footer thiá»‡p & Con dáº¥u Ä‘á» 3D (depth-layer-4) -->
+        <!-- Footer thiệp & Con dấu đỏ 3D (depth-layer-4) -->
         <div class="mt-5 pt-4 border-t border-amber-500/20 flex justify-between items-center text-xs text-slate-400 depth-layer-2">
           <div>
             <p class="font-cinzel text-amber-400/80 font-bold">INTERNATIONAL MEN'S DAY</p>
-            <p class="text-[11px] text-slate-400">TÃ´n vinh cá»‘ng hiáº¿n & báº£n lÄ©nh phÃ¡i máº¡nh</p>
+            <p class="text-[11px] text-slate-400">Tôn vinh cống hiến & bản lĩnh phái mạnh</p>
           </div>
           
-          <!-- Má»™c Ä‘á» ná»•i báº­t cao nháº¥t -->
+          <!-- Mộc đỏ nổi bật cao nhất -->
           <div class="stamp-approved depth-layer-4 px-2.5 py-1 rounded font-bold text-xs tracking-wider border-2 border-red-500 text-red-500 select-none">
-            âœ” OFFICIAL 19.11
+            ✔ OFFICIAL 19.11
           </div>
         </div>
 
       </div>
 
-      <!-- CHá»ˆ CÃ’N DUY NHáº¤T NÃšT Táº¢I áº¢NH THIá»†P -->
+      <!-- CHỈ CÒN DUY NHẤT NÚT TẢI ẢNH THIỆP -->
       <div class="flex justify-center pt-2">
         <button id="btn-download-card" class="flex items-center justify-center space-x-2 btn-gold px-8 py-3.5 rounded-xl text-sm font-bold tracking-wide transition shadow-lg hover:scale-105 active:scale-95">
-          <span class="text-base">ðŸ“¸</span>
-          <span>Táº£i áº¢nh Thiá»‡p Vá» MÃ¡y</span>
+          <span class="text-base">📸</span>
+          <span>Tải Ảnh Thiệp Về Máy</span>
         </button>
       </div>
 
@@ -203,112 +203,112 @@
 
   </main>
 
-<!-- MODAL BÃ Máº¬T QUáº¢N TRá»Š IT EDIT (CHá»ˆ Báº¬T KHI CÃ“ HASHTAG #itedit TRÃŠN URL) -->
-<div id="secret-itedit-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-  <div class="card-luxury w-full max-w-2xl max-h-[92vh] flex flex-col p-6 rounded-2xl border-gold-glow">
-    
-    <!-- Header Modal -->
-    <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-      <div class="flex items-center gap-2">
-        <span class="text-xl">ðŸ”</span>
-        <div>
-          <h3 class="font-bold text-base text-gold-shimmer">IT Edit â€¢ Quáº£n LÃ½ Lá»i ChÃºc 19/11</h3>
-          <p class="text-xs text-slate-400">Cá»•ng thiáº¿t láº­p bÃ­ máº­t dÃ nh riÃªng cho ban tá»• chá»©c</p>
+  <!-- MODAL BÍ MẬT QUẢN TRỊ IT EDIT (CHỈ BẬT KHI CÓ HASHTAG #itedit TRÊN URL) -->
+  <div id="secret-itedit-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="card-luxury w-full max-w-2xl max-h-[92vh] flex flex-col p-6 rounded-2xl border-gold-glow">
+      
+      <!-- Header Modal -->
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🔐</span>
+          <div>
+            <h3 class="font-bold text-base text-gold-shimmer">IT Edit • Quản Lý Lời Chúc 19/11</h3>
+            <p class="text-xs text-slate-400">Cổng thiết lập bí mật dành riêng cho ban tổ chức</p>
+          </div>
         </div>
-      </div>
-      <button id="btn-close-secret-modal" class="text-slate-400 hover:text-white text-xl px-2">âœ•</button>
-    </div>
-
-    <!-- 1. MÃ n hÃ¬nh nháº­p máº­t kháº©u (chÆ°a xÃ¡c thá»±c) -->
-    <div id="secret-login-view" class="py-8 max-w-sm mx-auto w-full space-y-4 text-center">
-      <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 mx-auto flex items-center justify-center text-xl">
-        ðŸ›¡ï¸
-      </div>
-      <p class="text-xs text-slate-300">Vui lÃ²ng nháº­p máº­t kháº©u quáº£n trá»‹ Ä‘á»ƒ má»Ÿ báº£ng Ä‘iá»u khiá»ƒn:</p>
-      
-      <form id="secret-login-form" class="space-y-3">
-        <input 
-          type="password" 
-          id="secret-password-input" 
-          required 
-          placeholder="Nháº­p máº­t kháº©u..." 
-          class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-center text-amber-200 text-sm focus:border-amber-400 focus:outline-none"
-        />
-        <p id="secret-pwd-error" class="text-xs text-red-400 hidden">Máº­t kháº©u khÃ´ng chÃ­nh xÃ¡c!</p>
-        <button type="submit" class="w-full py-2.5 btn-gold rounded-xl text-xs font-bold transition">
-          XÃ¡c Thá»±c Máº­t Kháº©u
-        </button>
-      </form>
-      <p class="text-[11px] text-slate-400">ðŸ’¡ Máº­t kháº©u máº·c Ä‘á»‹nh: <b class="text-amber-400">admin123</b></p>
-    </div>
-
-    <!-- 2. Báº£ng quáº£n trá»‹ thÃ nh viÃªn (khi Ä‘Ã£ xÃ¡c thá»±c) -->
-    <div id="secret-dashboard-view" class="hidden flex-1 overflow-hidden flex flex-col pt-3 space-y-3">
-      
-      <!-- Thá»‘ng kÃª & nÃºt xuáº¥t -->
-      <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-        <span id="secret-count-badge" class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-full font-semibold">
-          0 thÃ nh viÃªn
-        </span>
-        <button id="secret-btn-export" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-lg transition">
-          ðŸ“¥ Xuáº¥t file wishes.json
-        </button>
+        <button id="btn-close-secret-modal" class="text-slate-400 hover:text-white text-xl px-2">✕</button>
       </div>
 
-      <!-- Danh sÃ¡ch thÃ nh viÃªn -->
-      <div id="secret-wishes-list" class="flex-1 overflow-y-auto space-y-2.5 pr-1 max-h-56">
-        <!-- Render báº±ng JS -->
-      </div>
-
-      <!-- Form ThÃªm / Sá»­a -->
-      <div class="pt-3 border-t border-slate-700 bg-slate-900/60 p-3 rounded-xl">
-        <h4 id="secret-form-heading" class="text-xs font-bold uppercase text-amber-400 mb-2">
-          âž• ThÃªm Lá»i ChÃºc Cho ThÃ nh ViÃªn Má»›i:
-        </h4>
-        <form id="secret-add-form" class="space-y-2">
-          <input type="hidden" id="secret-edit-id" value="">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input 
-              type="text" 
-              id="secret-name" 
-              required 
-              placeholder="Há» tÃªn thÃ nh viÃªn (VD: Nguyá»…n VÄƒn ThÃ nh)" 
-              class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-amber-200 focus:border-amber-400 focus:outline-none"
-            />
-            <input 
-              type="text" 
-              id="secret-title" 
-              placeholder="Danh hiá»‡u (VD: Chiáº¿n Tháº§n GÃ¡nh Team...)" 
-              class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-amber-200 focus:border-amber-400 focus:outline-none"
-            />
-          </div>
-          <textarea 
-            id="secret-wish" 
+      <!-- 1. Màn hình nhập mật khẩu (chưa xác thực) -->
+      <div id="secret-login-view" class="py-8 max-w-sm mx-auto w-full space-y-4 text-center">
+        <div class="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/30 mx-auto flex items-center justify-center text-xl">
+          🛡️
+        </div>
+        <p class="text-xs text-slate-300">Vui lòng nhập mật khẩu quản trị để mở bảng điều khiển:</p>
+        
+        <form id="secret-login-form" class="space-y-3">
+          <input 
+            type="password" 
+            id="secret-password-input" 
             required 
-            rows="2" 
-            placeholder="Ná»™i dung lá»i chÃºc riÃªng biá»‡t..." 
-            class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-100 focus:border-amber-400 focus:outline-none"
-          ></textarea>
-          
-          <div class="flex gap-2">
-            <button type="button" id="secret-btn-cancel-edit" class="hidden px-3 py-1.5 bg-slate-800 text-slate-400 rounded-lg text-xs">
-              Há»§y sá»­a
-            </button>
-            <button type="submit" id="secret-btn-submit" class="flex-1 py-1.5 btn-gold rounded-lg text-xs font-bold transition">
-              LÆ°u Lá»i ChÃºc ThÃ nh ViÃªn
-            </button>
-          </div>
+            placeholder="Nhập mật khẩu..." 
+            class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-center text-amber-200 text-sm focus:border-amber-400 focus:outline-none"
+          />
+          <p id="secret-pwd-error" class="text-xs text-red-400 hidden">Mật khẩu không chính xác!</p>
+          <button type="submit" class="w-full py-2.5 btn-gold rounded-xl text-xs font-bold transition">
+            Xác Thực Mật Khẩu
+          </button>
         </form>
+        <p class="text-[11px] text-slate-400">💡 Mật khẩu mặc định: <b class="text-amber-400">admin123</b></p>
+      </div>
+
+      <!-- 2. Bảng quản trị thành viên (khi đã xác thực) -->
+      <div id="secret-dashboard-view" class="hidden flex-1 overflow-hidden flex flex-col pt-3 space-y-3">
+        
+        <!-- Thống kê & nút xuất -->
+        <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+          <span id="secret-count-badge" class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-0.5 rounded-full font-semibold">
+            0 thành viên
+          </span>
+          <button id="secret-btn-export" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-lg transition">
+            📥 Xuất file wishes.json
+          </button>
+        </div>
+
+        <!-- Danh sách thành viên -->
+        <div id="secret-wishes-list" class="flex-1 overflow-y-auto space-y-2.5 pr-1 max-h-56">
+          <!-- Render bằng JS -->
+        </div>
+
+        <!-- Form Thêm / Sửa -->
+        <div class="pt-3 border-t border-slate-700 bg-slate-900/60 p-3 rounded-xl">
+          <h4 id="secret-form-heading" class="text-xs font-bold uppercase text-amber-400 mb-2">
+            ➕ Thêm Lời Chúc Cho Thành Viên Mới:
+          </h4>
+          <form id="secret-add-form" class="space-y-2">
+            <input type="hidden" id="secret-edit-id" value="">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input 
+                type="text" 
+                id="secret-name" 
+                required 
+                placeholder="Họ tên thành viên (VD: Nguyễn Văn Thành)" 
+                class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-amber-200 focus:border-amber-400 focus:outline-none"
+              />
+              <input 
+                type="text" 
+                id="secret-title" 
+                placeholder="Danh hiệu (VD: Chiến Thần Gánh Team...)" 
+                class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-amber-200 focus:border-amber-400 focus:outline-none"
+              />
+            </div>
+            <textarea 
+              id="secret-wish" 
+              required 
+              rows="2" 
+              placeholder="Nội dung lời chúc riêng biệt..." 
+              class="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-slate-100 focus:border-amber-400 focus:outline-none"
+            ></textarea>
+            
+            <div class="flex gap-2">
+              <button type="button" id="secret-btn-cancel-edit" class="hidden px-3 py-1.5 bg-slate-800 text-slate-400 rounded-lg text-xs">
+                Hủy sửa
+              </button>
+              <button type="submit" id="secret-btn-submit" class="flex-1 py-1.5 btn-gold rounded-lg text-xs font-bold transition">
+                Lưu Lời Chúc Thành Viên
+              </button>
+            </div>
+          </form>
+        </div>
+
       </div>
 
     </div>
-
   </div>
-</div>
 
   <!-- Footer -->
   <footer class="text-center text-xs text-slate-400 z-10 py-3">
-    ChÃºc má»«ng NgÃ y Quá»‘c Táº¿ Nam Giá»›i 19/11 â€¢ TÃ´n vinh báº£n lÄ©nh & sá»± kiÃªn cÆ°á»ng cá»§a phÃ¡i máº¡nh!
+    Chúc mừng Ngày Quốc Tế Nam Giới 19/11 • Tôn vinh bản lĩnh & sự kiên cường của phái mạnh!
   </footer>
 
   <!-- Scripts -->
@@ -316,4 +316,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-

@@ -325,5 +325,188 @@ document.addEventListener('DOMContentLoaded', async () => {
       downloadBtn.innerHTML = originalText;
       downloadBtn.disabled = false;
     }
-  });
+  // ===== LOGIC QUẢN TRỊ BÍ MẬT KHI TRUY CẬP #itedit =====
+  const secretModal = document.getElementById('secret-itedit-modal');
+  const secretLoginView = document.getElementById('secret-login-view');
+  const secretDashboardView = document.getElementById('secret-dashboard-view');
+  const secretPasswordInput = document.getElementById('secret-password-input');
+  const secretPwdError = document.getElementById('secret-pwd-error');
+  const secretLoginForm = document.getElementById('secret-login-form');
+  const btnCloseSecretModal = document.getElementById('btn-close-secret-modal');
+
+  function checkSecretTrigger() {
+    if (window.location.hash === '#itedit' || window.location.search.includes('itedit')) {
+      if (secretModal) {
+        secretModal.classList.remove('hidden');
+        if (sessionStorage.getItem('itedit_auth') === 'true') {
+          showSecretDashboard();
+        } else {
+          secretLoginView.classList.remove('hidden');
+          secretDashboardView.classList.add('hidden');
+          secretPasswordInput.focus();
+        }
+      }
+    }
+  }
+
+  // Kiểm tra ngay khi tải trang và khi hash thay đổi
+  checkSecretTrigger();
+  window.addEventListener('hashchange', checkSecretTrigger);
+
+  if (btnCloseSecretModal) {
+    btnCloseSecretModal.addEventListener('click', () => {
+      secretModal.classList.add('hidden');
+      window.location.hash = '';
+    });
+  }
+
+  // Đăng nhập bằng mật khẩu admin123
+  if (secretLoginForm) {
+    secretLoginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      secretPwdError.classList.add('hidden');
+      if (secretPasswordInput.value.trim() === 'admin123') {
+        sessionStorage.setItem('itedit_auth', 'true');
+        showSecretDashboard();
+      } else {
+        secretPwdError.classList.remove('hidden');
+      }
+    });
+  }
+
+  function showSecretDashboard() {
+    secretLoginView.classList.add('hidden');
+    secretDashboardView.classList.remove('hidden');
+    renderSecretWishesList();
+  }
+
+  function renderSecretWishesList() {
+    const listEl = document.getElementById('secret-wishes-list');
+    const badgeEl = document.getElementById('secret-count-badge');
+    if (!listEl) return;
+
+    if (badgeEl) badgeEl.textContent = `${customWishes.length} thành viên`;
+
+    if (customWishes.length === 0) {
+      listEl.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Chưa có thành viên nào.</p>`;
+      return;
+    }
+
+    listEl.innerHTML = customWishes.map((item, idx) => `
+      <div class="bg-slate-800/90 p-2.5 rounded-lg border border-slate-700 flex justify-between items-center gap-2">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-bold text-amber-300 text-xs">${item.name}</span>
+            <span class="text-[10px] text-amber-400/80 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">${item.title || 'Quý Ông'}</span>
+          </div>
+          <p class="text-[11px] text-slate-300 truncate mt-0.5">${item.wish}</p>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <button onclick="copyMemberLink('${encodeURIComponent(item.name)}')" class="text-[11px] bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded" title="Sao chép link gửi riêng">
+            📋 Copy Link
+          </button>
+          <button onclick="editSecretWish(${idx})" class="text-[11px] bg-amber-600 hover:bg-amber-500 text-white px-2 py-1 rounded">
+            ✏️
+          </button>
+          <button onclick="deleteSecretWish(${idx})" class="text-[11px] bg-red-600 hover:bg-red-500 text-white px-2 py-1 rounded">
+            🗑️
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Thêm / Sửa thành viên trong secret modal
+  const secretAddForm = document.getElementById('secret-add-form');
+  if (secretAddForm) {
+    secretAddForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const editIdx = document.getElementById('secret-edit-id').value;
+      const name = document.getElementById('secret-name').value.trim();
+      const title = document.getElementById('secret-title').value.trim();
+      const wish = document.getElementById('secret-wish').value.trim();
+
+      if (!name || !wish) return;
+
+      const keywords = [name.toLowerCase()];
+      const parts = name.split(' ');
+      if (parts.length > 1) keywords.push(parts[parts.length - 1].toLowerCase());
+
+      if (editIdx !== '') {
+        const i = parseInt(editIdx, 10);
+        customWishes[i] = { ...customWishes[i], name, title: title || 'Quý Ông Đích Thực', wish, keywords };
+      } else {
+        customWishes.unshift({
+          id: Date.now().toString(),
+          name,
+          title: title || 'Quý Ông Đích Thực',
+          wish,
+          keywords
+        });
+      }
+
+      localStorage.setItem('mens_day_wishes_storage_v2', JSON.stringify(customWishes));
+      renderSecretWishesList();
+      resetSecretForm();
+      alert(`Đã lưu thành công lời chúc cho "${name}"!`);
+    });
+  }
+
+  const btnCancelSecretEdit = document.getElementById('secret-btn-cancel-edit');
+  if (btnCancelSecretEdit) {
+    btnCancelSecretEdit.addEventListener('click', resetSecretForm);
+  }
+
+  function resetSecretForm() {
+    document.getElementById('secret-edit-id').value = '';
+    document.getElementById('secret-name').value = '';
+    document.getElementById('secret-title').value = '';
+    document.getElementById('secret-wish').value = '';
+    document.getElementById('secret-form-heading').textContent = '➕ Thêm Lời Chúc Cho Thành Viên Mới:';
+    document.getElementById('secret-btn-submit').textContent = 'Lưu Lời Chúc Thành Viên';
+    document.getElementById('secret-btn-cancel-edit').classList.add('hidden');
+  }
+
+  window.editSecretWish = function(idx) {
+    const item = customWishes[idx];
+    if (!item) return;
+    document.getElementById('secret-edit-id').value = idx;
+    document.getElementById('secret-name').value = item.name;
+    document.getElementById('secret-title').value = item.title || '';
+    document.getElementById('secret-wish').value = item.wish;
+    document.getElementById('secret-form-heading').textContent = `✏️ Sửa lời chúc của: ${item.name}`;
+    document.getElementById('secret-btn-submit').textContent = `Cập nhật cho ${item.name}`;
+    document.getElementById('secret-btn-cancel-edit').classList.remove('hidden');
+  };
+
+  window.deleteSecretWish = function(idx) {
+    if (confirm(`Bạn có chắc muốn xóa lời chúc này?`)) {
+      customWishes.splice(idx, 1);
+      localStorage.setItem('mens_day_wishes_storage_v2', JSON.stringify(customWishes));
+      renderSecretWishesList();
+      resetSecretForm();
+    }
+  };
+
+  window.copyMemberLink = function(encodedName) {
+    const url = `${window.location.origin}/?name=${encodedName}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert(`Đã sao chép link gửi riêng!\n${url}\n\nBạn có thể gửi trực tiếp link này cho người nhận.`);
+    }).catch(() => {
+      prompt("Link gửi riêng của người này:", url);
+    });
+  };
+
+  const btnExport = document.getElementById('secret-btn-export');
+  if (btnExport) {
+    btnExport.addEventListener('click', () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(customWishes, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = "wishes.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+  }
 });

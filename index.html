@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mừng Ngày Quốc Tế Nam Giới 19/11 | International Men's Day</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  
+  <!-- HTML2Canvas để tải ảnh thiệp -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Custom Styles (Hiệu ứng 3D Parallax & Lời Chúc 3D) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col justify-between min-h-screen relative px-4 py-6 sm:px-6 lg:px-8">
+
+  <!-- Background Canvas cho hiệu ứng bụi sao vàng -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- HEADER DÀNH CHO NGƯỜI NHẬN -->
+  <header class="w-full max-w-4xl mx-auto flex justify-between items-center z-10 py-2">
+    <div class="flex items-center space-x-2">
+      <span class="text-2xl">🎩</span>
+      <span class="font-cinzel text-xs sm:text-sm tracking-widest uppercase text-amber-300 font-bold">
+        Men's Day 19.11
+      </span>
+    </div>
+    <div class="text-[11px] text-amber-400/70 border border-amber-500/20 px-3 py-1 rounded-full bg-slate-900/40">
+      ★ Tôn Vinh Phái Mạnh
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main class="w-full max-w-xl mx-auto my-auto z-10 py-6">
+
+    <!-- BƯỚC 1: MÀN HÌNH TIẾP ĐÓN & NHẬP TÊN -->
+    <div id="step-input" class="card-luxury p-8 sm:p-10 rounded-2xl text-center relative border-gold-glow">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 mb-5 shadow-lg">
+        <span class="text-3xl">👑</span>
+      </div>
+
+      <p class="text-xs uppercase tracking-widest text-amber-400 font-cinzel font-semibold mb-2">
+        International Men's Day • 19 Tháng 11
+      </p>
+      
+      <h1 class="text-2xl sm:text-3xl font-bold font-serif-luxury text-gold-shimmer mb-3 leading-snug">
+        Thông Điệp Tri Ân Quý Ông
+      </h1>
+
+      <p class="text-slate-300 text-sm sm:text-base mb-8 max-w-md mx-auto leading-relaxed">
+        Một ngày đặc biệt dành riêng cho phái mạnh! Hãy nhập họ và tên của bạn để mở bức thiệp vinh danh được thiết kế riêng.
+      </p>
+
+      <!-- Form nhập tên -->
+      <form id="name-form" class="space-y-4">
+        <div class="relative">
+          <input 
+            type="text" 
+            id="recipient-name-input" 
+            required
+            autocomplete="off"
+            placeholder="Nhập họ và tên của bạn (Ví dụ: Nguyễn Văn Thành)..." 
+            class="w-full px-5 py-3.5 bg-slate-900/90 border border-amber-500/40 rounded-xl text-amber-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-center font-medium text-base transition shadow-inner"
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          id="btn-submit-name"
+          class="w-full py-3.5 px-6 rounded-xl btn-gold text-base tracking-wide flex items-center justify-center space-x-2"
+        >
+          <span>Mở Thiệp & Nhận Lời Chúc (Enter ↵)</span>
+          <span class="text-lg">✨</span>
+        </button>
+      </form>
+
+      <p class="text-xs text-slate-400 mt-6 italic">
+        💡 Bạn chỉ cần điền đúng họ và tên rồi ấn Enter để nhận món quà bất ngờ!
+      </p>
+    </div>
+
+    <!-- BƯỚC 1.5: MÀN DIỄN HOẠT PHONG BÌ 3D (XUẤT HIỆN KHI ẤN ENTER) -->
+    <div id="step-envelope-3d" class="hidden text-center py-10 perspective-1200">
+      
+      <p id="envelope-status-text" class="text-sm font-semibold text-amber-300 uppercase tracking-widest font-cinzel mb-8 animate-pulse">
+        ✉️ Đang gửi trao thư chúc mừng đặc biệt...
+      </p>
+
+      <!-- Phong bì 3D -->
+      <div id="envelope-box" class="envelope-3d-box">
+        
+        <!-- Nắp phong bì 3D lật mở -->
+        <div class="envelope-flap">
+          <div class="envelope-seal shadow-2xl">
+            👑
+          </div>
+        </div>
+
+        <!-- Tờ thiệp bên trong chuẩn bị trượt lên -->
+        <div class="envelope-inner-card flex flex-col items-center justify-center p-4 text-center">
+          <span class="text-xs text-amber-400 font-cinzel font-bold">MEN'S DAY 19/11</span>
+          <span id="envelope-preview-name" class="text-sm font-bold text-white mt-1">Họ Và Tên</span>
+          <span class="text-[10px] text-amber-300/80 mt-0.5">⚜️ Quý Ông Đích Thực ⚜️</span>
+        </div>
+
+        <!-- Thân túi phong bì -->
+        <div class="envelope-body flex flex-col justify-end p-4">
+          <div class="envelope-pocket-pattern"></div>
+          <div class="relative z-10 text-center">
+            <span class="text-xs tracking-widest text-amber-400/90 font-cinzel uppercase font-bold">
+              ★ FOR SPECIAL GENTLEMAN ★
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BƯỚC 2: MÀN HÌNH THIỆP 3D & LỜI CHÚC LẬP THỂ (BUNG MỞ TOÀN CẢNH) -->
+    <div id="step-card" class="hidden space-y-5">
+      
+      <!-- KHUNG THIỆP 3D PARALLAX & TƯƠNG TÁC CHUỘT (card-3d-interactive) -->
+      <div id="greeting-card-content" class="card-luxury card-expanded-view card-3d-interactive p-8 sm:p-10 rounded-2xl relative border-gold-glow overflow-hidden select-none">
+        
+        <!-- Lớp phản chiếu ánh sáng 3D Glare -->
+        <div class="card-glare" id="card-glare"></div>
+
+        <!-- Họa tiết góc thiệp sang trọng -->
+        <div class="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-amber-400/40 pointer-events-none"></div>
+        <div class="absolute top-3 right-3 w-8 h-8 border-t-2 border-r-2 border-amber-400/40 pointer-events-none"></div>
+        <div class="absolute bottom-3 left-3 w-8 h-8 border-b-2 border-l-2 border-amber-400/40 pointer-events-none"></div>
+        <div class="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-amber-400/40 pointer-events-none"></div>
+
+        <!-- Header thiệp (Tầng 3D depth-layer-2) -->
+        <div class="text-center relative pb-4 mb-4 border-b border-amber-500/20 depth-layer-2">
+          <div class="inline-block px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-2">
+            ★ SPECIAL TRIBUTE • 19/11/2026 ★
+          </div>
+          
+          <h2 class="text-xs uppercase tracking-widest text-slate-400 font-cinzel">
+            TRÂN TRỌNG VINH DANH
+          </h2>
+
+          <!-- Tên người nhận nổi bật tầng 3D cao nhất (depth-layer-4) -->
+          <div class="my-2 depth-layer-4">
+            <h1 id="card-recipient-name" class="text-3xl sm:text-4xl font-extrabold font-serif-luxury text-gold-3d tracking-tight">
+              Họ Và Tên
+            </h1>
+          </div>
+
+          <!-- Danh hiệu trao tặng (depth-layer-3) -->
+          <div class="inline-flex items-center space-x-1.5 mt-1 depth-layer-3">
+            <span class="text-amber-400">⚜️</span>
+            <span id="card-title-tag" class="text-sm font-semibold text-amber-300">
+              Quý Ông Đích Thực
+            </span>
+            <span class="text-amber-400">⚜️</span>
+          </div>
+        </div>
+
+        <!-- KHUNG LỜI CHÚC 3D LẬP THỂ (depth-layer-3 & wish-3d-container) -->
+        <div class="py-5 px-4 text-center relative wish-3d-container depth-layer-3 my-2">
+          <svg class="w-8 h-8 text-amber-500/30 mx-auto mb-2 depth-layer-1" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+          </svg>
+          
+          <!-- Nội dung lời chúc 3D được render động từng chữ bay ra -->
+          <div id="card-wish-text" class="text-base sm:text-lg leading-relaxed font-normal px-2 sm:px-4">
+            <!-- Chữ 3D xuất hiện qua JS -->
+          </div>
+        </div>
+
+        <!-- Footer thiệp & Con dấu đỏ 3D (depth-layer-4) -->
+        <div class="mt-5 pt-4 border-t border-amber-500/20 flex justify-between items-center text-xs text-slate-400 depth-layer-2">
+          <div>
+            <p class="font-cinzel text-amber-400/80 font-bold">INTERNATIONAL MEN'S DAY</p>
+            <p class="text-[11px] text-slate-400">Tôn vinh cống hiến & bản lĩnh phái mạnh</p>
+          </div>
+          
+          <!-- Mộc đỏ nổi bật cao nhất -->
+          <div class="stamp-approved depth-layer-4 px-2.5 py-1 rounded font-bold text-xs tracking-wider border-2 border-red-500 text-red-500 select-none">
+            ✔ OFFICIAL 19.11
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CHỈ CÒN DUY NHẤT NÚT TẢI ẢNH THIỆP -->
+      <div class="flex justify-center pt-2">
+        <button id="btn-download-card" class="flex items-center justify-center space-x-2 btn-gold px-8 py-3.5 rounded-xl text-sm font-bold tracking-wide transition shadow-lg hover:scale-105 active:scale-95">
+          <span class="text-base">📸</span>
+          <span>Tải Ảnh Thiệp Về Máy</span>
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-xs text-slate-400 z-10 py-3">
+    Chúc mừng Ngày Quốc Tế Nam Giới 19/11 • Tôn vinh bản lĩnh & sự kiên cường của phái mạnh!
+  </footer>
+
+  <!-- Scripts -->
+  <script src="wishes-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

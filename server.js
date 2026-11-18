@@ -232,13 +232,13 @@ const server = http.createServer(async (req, res) => {
 
   // ===== ĐƯỜNG DẪN TRANG WEB =====
 
-  // Đường dẫn bí mật cho Admin: /itedit hoặc /admin
-  if (urlPath === '/itedit' || urlPath === '/itedit/' || urlPath === '/admin' || urlPath === '/admin/') {
-    const adminFilePath = path.join(__dirname, 'admin.html');
+  // Đường dẫn bí mật cho Admin: /itedit
+  if (urlPath === '/itedit' || urlPath === '/itedit/') {
+    const adminFilePath = path.join(__dirname, 'itedit.html');
     return fs.readFile(adminFilePath, (err, content) => {
       if (err) {
         res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-        return res.end('Lỗi nạp trang admin');
+        return res.end('Lỗi nạp trang itedit');
       }
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(content);

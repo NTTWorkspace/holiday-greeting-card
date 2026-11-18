@@ -16,20 +16,33 @@ function normalizeString(str) {
     .trim();
 }
 
-// Tải danh sách lời chúc từ Server
+// Tải danh sách lời chúc từ Server hoặc Storage
 async function loadWishesFromServer() {
+  // 1. Kiểm tra LocalStorage nếu có
+  const localSaved = localStorage.getItem('mens_day_wishes_storage_v2');
+  if (localSaved) {
+    try {
+      const parsed = JSON.parse(localSaved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        customWishes = parsed;
+        return;
+      }
+    } catch (e) {}
+  }
+
+  // 2. Thử nạp từ file static data trên Vercel / server
   try {
-    const res = await fetch('/api/wishes');
+    const res = await fetch('/data/wishes.json');
     if (res.ok) {
-      const result = await res.json();
-      if (result.success && Array.isArray(result.data)) {
-        customWishes = result.data;
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        customWishes = data;
         return;
       }
     }
-  } catch (err) {
-    console.warn("Chưa kết nối được server API, dùng dữ liệu fallback:", err);
-  }
+  } catch (err) {}
+
+  // 3. Fallback mặc định từ wishes-data.js
   customWishes = typeof defaultCustomWishes !== 'undefined' ? [...defaultCustomWishes] : [];
 }
 

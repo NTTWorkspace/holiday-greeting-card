@@ -2,7 +2,7 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/itedit", "destination": "/admin.html" },
+    { "source": "/itedit", "destination": "/itedit.html" },
     { "source": "/api/wishes", "destination": "/data/wishes.json" }
   ],
   "headers": [

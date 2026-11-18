@@ -1,8 +1,11 @@
 /**
- * Logic Quản Trị Hệ Thống 19/11 (admin.js)
+ * Logic Cổng Quản Trị itedit.js (Hoạt động 100% trên Vercel)
  */
 
-let adminToken = localStorage.getItem('admin_token') || '';
+const STORAGE_KEY = 'mens_day_wishes_storage_v2';
+const AUTH_KEY = 'itedit_authenticated';
+const ADMIN_PASSWORD = 'admin123'; // Mật khẩu quản trị mặc định
+
 let wishesList = [];
 
 // Chuẩn hóa chuỗi tiếng Việt để tìm kiếm
@@ -21,46 +24,37 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sectionLogin = document.getElementById('section-login');
   const sectionDashboard = document.getElementById('section-dashboard');
   const btnLogout = document.getElementById('btn-admin-logout');
-
-  // Kiểm tra phiên đăng nhập
-  await verifySession();
-
-  // Xử lý Đăng Nhập
   const loginForm = document.getElementById('admin-login-form');
+  const loginPassword = document.getElementById('login-password');
   const loginErrorMsg = document.getElementById('login-error-msg');
 
-  loginForm.addEventListener('submit', async (e) => {
+  // Kiểm tra phiên đăng nhập
+  if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+    showDashboard();
+  } else {
+    showLogin();
+  }
+
+  // Xử lý Đăng Nhập bằng Mật khẩu (Không cần backend)
+  loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const username = document.getElementById('login-username').value.trim();
-    const password = document.getElementById('login-password').value.trim();
+    const pwd = loginPassword.value.trim();
     loginErrorMsg.classList.add('hidden');
 
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await res.json();
-
-      if (data.success && data.token) {
-        adminToken = data.token;
-        localStorage.setItem('admin_token', adminToken);
-        showDashboard();
-      } else {
-        loginErrorMsg.textContent = data.message || "Tài khoản hoặc mật khẩu không đúng!";
-        loginErrorMsg.classList.remove('hidden');
-      }
-    } catch (err) {
-      loginErrorMsg.textContent = "Không thể kết nối đến máy chủ!";
+    if (pwd === ADMIN_PASSWORD) {
+      sessionStorage.setItem(AUTH_KEY, 'true');
+      showDashboard();
+      loginForm.reset();
+    } else {
+      loginErrorMsg.textContent = "Mật khẩu không chính xác! Vui lòng thử lại.";
       loginErrorMsg.classList.remove('hidden');
+      loginPassword.focus();
     }
   });
 
   // Đăng xuất
   btnLogout.addEventListener('click', () => {
-    adminToken = '';
-    localStorage.removeItem('admin_token');
+    sessionStorage.removeItem(AUTH_KEY);
     showLogin();
   });
 
@@ -71,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Xử lý Form Thêm / Cập nhật lời chúc
   const wishForm = document.getElementById('wish-form');
-  wishForm.addEventListener('submit', async (e) => {
+  wishForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const editId = document.getElementById('form-edit-id').value;
     const name = document.getElementById('form-name').value.trim();
@@ -86,71 +80,53 @@ document.addEventListener('DOMContentLoaded', async () => {
       keywords.push(parts[parts.length - 1].toLowerCase());
     }
 
-    try {
-      let res;
-      if (editId) {
-        // Cập nhật (PUT)
-        res = await fetch(`/api/wishes/${editId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${adminToken}`
-          },
-          body: JSON.stringify({ name, title, wish, keywords })
-        });
-      } else {
-        // Thêm mới (POST)
-        res = await fetch('/api/wishes', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${adminToken}`
-          },
-          body: JSON.stringify({ name, title, wish, keywords })
-        });
+    if (editId) {
+      // Cập nhật
+      const index = wishesList.findIndex(item => item.id === editId);
+      if (index !== -1) {
+        wishesList[index] = {
+          ...wishesList[index],
+          name,
+          title: title || 'Quý Ông Đích Thực',
+          wish,
+          keywords,
+          updatedAt: new Date().toISOString()
+        };
       }
-
-      const result = await res.json();
-      if (result.success) {
-        await loadWishes();
-        resetFormEdit();
-        alert(editId ? `Đã cập nhật lời chúc cho "${name}" thành công!` : `Đã thêm thành công lời chúc cho "${name}"!`);
-      } else {
-        alert(result.message || "Có lỗi xảy ra!");
-      }
-    } catch (err) {
-      alert("Lỗi kết nối máy chủ!");
+    } else {
+      // Thêm mới
+      wishesList.unshift({
+        id: Date.now().toString(),
+        name,
+        title: title || 'Quý Ông Đích Thực',
+        wish,
+        keywords,
+        updatedAt: new Date().toISOString()
+      });
     }
+
+    saveWishes();
+    renderWishes();
+    resetFormEdit();
+    alert(editId ? `Đã cập nhật lời chúc cho "${name}" thành công!` : `Đã thêm thành công lời chúc cho "${name}"!`);
   });
 
   // Nút Hủy chế độ sửa
   document.getElementById('btn-cancel-edit').addEventListener('click', () => {
     resetFormEdit();
   });
-});
 
-// Kiểm tra token
-async function verifySession() {
-  if (!adminToken) {
-    showLogin();
-    return;
-  }
-  try {
-    const res = await fetch('/api/auth/check', {
-      headers: { 'Authorization': `Bearer ${adminToken}` }
-    });
-    const data = await res.json();
-    if (data.authenticated) {
-      showDashboard();
-    } else {
-      adminToken = '';
-      localStorage.removeItem('admin_token');
-      showLogin();
-    }
-  } catch (e) {
-    showLogin();
-  }
-}
+  // Nút Xuất file JSON
+  document.getElementById('btn-export-json').addEventListener('click', () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(wishesList, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "wishes.json");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  });
+});
 
 function showLogin() {
   document.getElementById('section-login').classList.remove('hidden');
@@ -165,18 +141,41 @@ async function showDashboard() {
   await loadWishes();
 }
 
-// Tải danh sách từ server
+// Tải danh sách lời chúc
 async function loadWishes() {
-  try {
-    const res = await fetch('/api/wishes');
-    const result = await res.json();
-    if (result.success && Array.isArray(result.data)) {
-      wishesList = result.data;
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      wishesList = JSON.parse(saved);
       renderWishes();
-    }
-  } catch (e) {
-    console.error("Lỗi tải danh sách:", e);
+      return;
+    } catch (e) {}
   }
+
+  // Thử tải từ server/file static
+  try {
+    const res = await fetch('/data/wishes.json');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        wishesList = data;
+        saveWishes();
+        renderWishes();
+        return;
+      }
+    }
+  } catch (e) {}
+
+  // Fallback từ wishes-data.js
+  if (typeof defaultCustomWishes !== 'undefined') {
+    wishesList = [...defaultCustomWishes];
+    saveWishes();
+  }
+  renderWishes();
+}
+
+function saveWishes() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(wishesList));
 }
 
 // Render danh sách thành viên
@@ -214,7 +213,10 @@ function renderWishes(searchTerm = '') {
         </div>
         <p class="text-xs text-slate-300 mt-1.5 line-clamp-2 leading-relaxed">${item.wish}</p>
       </div>
-      <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0">
+      <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0 flex-wrap">
+        <button onclick="copyMemberLink('${encodeURIComponent(item.name)}')" class="text-xs bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg transition" title="Sao chép link gửi riêng">
+          📋 Copy Link
+        </button>
         <a href="/?name=${encodeURIComponent(item.name)}" target="_blank" class="text-xs bg-emerald-600/80 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-lg transition" title="Mở thiệp của người này">
           👁️ Xem thiệp
         </a>
@@ -228,6 +230,16 @@ function renderWishes(searchTerm = '') {
     </div>
   `).join('');
 }
+
+// Sao chép link gửi riêng cho từng người
+window.copyMemberLink = function(encodedName) {
+  const url = `${window.location.origin}/?name=${encodedName}`;
+  navigator.clipboard.writeText(url).then(() => {
+    alert(`Đã sao chép link gửi riêng!\n${url}\n\nBạn có thể gửi trực tiếp link này qua Zalo/Facebook cho người đó.`);
+  }).catch(() => {
+    prompt("Link gửi riêng của người này:", url);
+  });
+};
 
 // Bắt đầu sửa lời chúc
 window.startEdit = function(id) {
@@ -253,30 +265,19 @@ function resetFormEdit() {
   document.getElementById('form-title').value = '';
   document.getElementById('form-wish').value = '';
   document.getElementById('form-heading').innerHTML = `<span>➕</span><span>Thêm Lời Chúc Cho Thành Viên Mới</span>`;
-  document.getElementById('btn-submit-form').textContent = `Lưu Lời Chúc Lên Hệ Thống`;
+  document.getElementById('btn-submit-form').textContent = `Lưu Lời Chúc Thành Viên`;
   document.getElementById('btn-cancel-edit').classList.add('hidden');
 }
 
 // Xóa lời chúc
-window.deleteWish = async function(id) {
+window.deleteWish = function(id) {
   const item = wishesList.find(w => w.id === id);
   if (!item) return;
 
   if (confirm(`Bạn có chắc muốn xóa lời chúc dành cho "${item.name}"?`)) {
-    try {
-      const res = await fetch(`/api/wishes/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${adminToken}` }
-      });
-      const data = await res.json();
-      if (data.success) {
-        await loadWishes();
-        resetFormEdit();
-      } else {
-        alert(data.message || "Không thể xóa!");
-      }
-    } catch (e) {
-      alert("Lỗi kết nối khi xóa!");
-    }
+    wishesList = wishesList.filter(w => w.id !== id);
+    saveWishes();
+    renderWishes();
+    resetFormEdit();
   }
 };

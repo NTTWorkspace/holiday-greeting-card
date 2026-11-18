@@ -2,7 +2,7 @@
  * App Logic cho Người Nhận Thiệp 19/11 với Hiệu Ứng Phong Bì 3D & Lời Chúc 3D
  */
 
-let customWishes = [];
+let customWishes = typeof defaultCustomWishes !== 'undefined' ? [...defaultCustomWishes] : [];
 
 // Chuẩn hóa chuỗi tiếng Việt để so khớp (không dấu, thường)
 function normalizeString(str) {
@@ -46,22 +46,40 @@ async function loadWishesFromServer() {
   customWishes = typeof defaultCustomWishes !== 'undefined' ? [...defaultCustomWishes] : [];
 }
 
-// Tìm lời chúc theo tên
+// Tìm lời chúc theo tên (Thuật toán so khớp thông minh)
 function findWishByName(inputName) {
+  if (!inputName) return null;
   const normInput = normalizeString(inputName);
   
+  // 1. So khớp chính xác hoặc theo từ khóa đã cài đặt
   for (const item of customWishes) {
-    if (normalizeString(item.name) === normInput) {
+    const normItemName = normalizeString(item.name);
+    if (normItemName === normInput) {
       return item;
     }
     if (item.keywords && Array.isArray(item.keywords)) {
       for (const kw of item.keywords) {
-        if (normInput.includes(normalizeString(kw))) {
+        const normKw = normalizeString(kw);
+        if (normInput.includes(normKw) || normKw.includes(normInput)) {
           return item;
         }
       }
     }
   }
+
+  // 2. So khớp theo tên gọi chính (ví dụ: gõ "Vinh", "Lê Vinh" đều khớp "Nguyễn Lê Vinh")
+  const parts = normInput.split(/\s+/);
+  const lastName = parts[parts.length - 1];
+  if (lastName && lastName.length >= 2) {
+    for (const item of customWishes) {
+      const itemParts = normalizeString(item.name).split(/\s+/);
+      const itemLastName = itemParts[itemParts.length - 1];
+      if (itemLastName === lastName) {
+        return item;
+      }
+    }
+  }
+
   return null;
 }
 
@@ -140,18 +158,13 @@ function initBackgroundParticles() {
 }
 
 /**
- * Hiệu ứng phân giải chữ 3D: Tách lời chúc thành các từ bay theo trục Z
+ * Hiển thị lời chúc 3D sắc nét, nổi bật và có animation mượt mà
  */
 function render3DWishText(text) {
   const container = document.getElementById('card-wish-text');
   if (!container) return;
   
-  const words = text.split(/\s+/);
-  container.innerHTML = words.map((word, index) => {
-    // Độ trễ so le mỗi từ 0.04s tạo làn sóng chữ 3D nối tiếp
-    const delay = (index * 0.045).toFixed(3);
-    return `<span class="word-3d" style="animation-delay: ${delay}s">${word}</span>`;
-  }).join(' ');
+  container.innerHTML = `<p class="wish-text-display font-medium text-slate-100">${text}</p>`;
 }
 
 /**
@@ -258,9 +271,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       wishTitle = matched.title || "Quý Ông Đích Thực";
       wishText = matched.wish;
     } else {
+      // Tự động chèn tên người nhận vào lời chúc mẫu để luôn mang tính cá nhân hóa tương ứng
+      const nameParts = name.trim().split(/\s+/);
+      const shortName = nameParts[nameParts.length - 1];
       const randomItem = defaultWishPool[Math.floor(Math.random() * defaultWishPool.length)];
       wishTitle = randomItem.title;
-      wishText = randomItem.wish;
+      wishText = randomItem.wish.replace(/bạn/g, `anh ${shortName}`);
     }
 
     document.getElementById('card-title-tag').textContent = wishTitle;

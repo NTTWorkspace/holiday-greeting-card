@@ -158,13 +158,17 @@ function initBackgroundParticles() {
 }
 
 /**
- * Hiển thị lời chúc 3D sắc nét, nổi bật và có animation mượt mà
+ * Hiệu ứng từng từ trong lời chúc xuất hiện lần lượt (3D Stagger Wave)
  */
 function render3DWishText(text) {
   const container = document.getElementById('card-wish-text');
   if (!container) return;
   
-  container.innerHTML = `<p class="wish-text-display font-medium text-slate-100">${text}</p>`;
+  const words = text.split(/\s+/);
+  container.innerHTML = words.map((word, index) => {
+    const delay = (index * 0.04).toFixed(3);
+    return `<span class="word-3d" style="animation-delay: ${delay}s">${word}</span>`;
+  }).join(' ');
 }
 
 /**
@@ -238,15 +242,19 @@ window.handleSubmitRecipientName = function(e) {
   return false;
 };
 
-// Chuỗi chuyển động mở thiệp (Mở trực tiếp, mượt mà và tráng lệ như bản đầu)
+// Chuỗi chuyển động mở phong bì 3D & bung thiệp vinh danh
 function start3DOpeningSequence(name) {
   currentRecipientName = name;
 
   const stepInput = document.getElementById('step-input');
+  const stepEnvelope3D = document.getElementById('step-envelope-3d');
+  const envelopeBox = document.getElementById('envelope-box');
+  const envelopePreviewName = document.getElementById('envelope-preview-name');
   const stepCard = document.getElementById('step-card');
   const cardElement = document.getElementById('greeting-card-content');
 
-  // 1. Cập nhật tên vào thiệp
+  // 1. Cập nhật tên vào thiệp nhỏ phong bì và thiệp lớn
+  if (envelopePreviewName) envelopePreviewName.textContent = name;
   const cardNameEl = document.getElementById('card-recipient-name');
   if (cardNameEl) cardNameEl.textContent = name;
 
@@ -258,7 +266,6 @@ function start3DOpeningSequence(name) {
     wishTitle = matched.title || "Quý Ông Đích Thực";
     wishText = matched.wish;
   } else {
-    // Tự động chèn tên người nhận vào lời chúc mẫu để luôn mang tính cá nhân hóa tương ứng
     const nameParts = name.trim().split(/\s+/);
     const shortName = nameParts[nameParts.length - 1];
     const randomItem = defaultWishPool[Math.floor(Math.random() * defaultWishPool.length)];
@@ -269,24 +276,37 @@ function start3DOpeningSequence(name) {
   const titleTag = document.getElementById('card-title-tag');
   if (titleTag) titleTag.textContent = wishTitle;
 
-  // 3. Hiển thị lời chúc rõ ràng
-  render3DWishText(wishText);
-
-  // 4. Chuyển cảnh mở thiệp ngay lập tức
+  // 3. Ẩn form nhập tên & Hiện phong bì 3D bay vào
   if (stepInput) stepInput.classList.add('hidden');
-  if (stepCard) stepCard.classList.remove('hidden');
+  if (stepEnvelope3D) stepEnvelope3D.classList.remove('hidden');
+  if (envelopeBox) envelopeBox.classList.remove('is-open');
 
-  // Kích hoạt lại animation mở thiệp 3D card-appear
-  if (cardElement) {
-    cardElement.classList.remove('card-appear');
-    void cardElement.offsetWidth; // Reflow
-    cardElement.classList.add('card-appear');
-  }
+  // 4. Sau 600ms: Nắp phong bì mở 180 độ theo chiều 3D, thiệp nhỏ nhô lên
+  setTimeout(() => {
+    if (envelopeBox) envelopeBox.classList.add('is-open');
+    const statusText = document.getElementById('envelope-status-text');
+    if (statusText) statusText.textContent = "✨ Đang mở niêm phong thiệp vinh danh...";
+  }, 600);
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // 5. Sau 1800ms: Tờ thiệp chính thức bung to toàn cảnh + Chữ xuất hiện lần lượt + Pháo hoa
+  setTimeout(() => {
+    if (stepEnvelope3D) stepEnvelope3D.classList.add('hidden');
+    if (stepCard) stepCard.classList.remove('hidden');
 
-  // 5. Kích hoạt pháo hoa Confetti hoàng tráng
-  triggerFestiveConfetti();
+    if (cardElement) {
+      cardElement.classList.remove('card-appear');
+      void cardElement.offsetWidth;
+      cardElement.classList.add('card-appear');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Từng từ trong lời chúc xuất hiện lần lượt so le 3D!
+    render3DWishText(wishText);
+
+    // Kích hoạt pháo hoa Confetti hoàng tráng
+    triggerFestiveConfetti();
+  }, 1800);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

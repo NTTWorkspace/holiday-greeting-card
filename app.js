@@ -30,9 +30,9 @@ async function loadWishesFromServer() {
     } catch (e) {}
   }
 
-  // 2. Thử nạp từ file static data trên Vercel / server
+  // 2. Thử nạp từ file static data
   try {
-    const res = await fetch('/data/wishes.json');
+    const res = await fetch('data/wishes.json');
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
@@ -489,7 +489,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   window.copyMemberLink = function(encodedName) {
-    const url = `${window.location.origin}/?name=${encodedName}`;
+    const baseUrl = window.location.href.split('?')[0].split('#')[0];
+    const url = `${baseUrl}?name=${encodedName}`;
     navigator.clipboard.writeText(url).then(() => {
       alert(`Đã sao chép link gửi riêng!\n${url}\n\nBạn có thể gửi trực tiếp link này cho người nhận.`);
     }).catch(() => {

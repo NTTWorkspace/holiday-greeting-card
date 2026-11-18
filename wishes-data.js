@@ -28,9 +28,9 @@ const defaultCustomWishes = [
   {
     id: "1794990809694",
     name: "Trần Minh Hoàng",
-    title: "Người Anh Vững Vàng & Điềm Tĩnh",
+    title: "Giám Đốc Tầm Nhìn & Thuyền Trưởng Bản Lĩnh",
     wish: "Chúc anh Hoàng luôn mạnh khỏe, vui vẻ và giữ được thật nhiều năng lượng tích cực trong công việc cũng như cuộc sống. Chúc anh luôn vững vàng trước những áp lực công việc, mọi kế hoạch và dự định đều thuận lợi, suôn sẻ. Mong anh có thêm nhiều thời gian nghỉ ngơi, cân bằng giữa công việc và cuộc sống, đồng thời chúc gia đình anh luôn hạnh phúc, ấm êm và nhiều niềm vui !",
-    keywords: ["trần minh hoàng", "tran minh hoang", "hoàng", "hoang", "anh hoàng", "anh hoang", "minh hoàng", "minh hoang"]
+    keywords: ["trần minh hoàng", "tran minh hoang", "hoàng", "hoang", "anh hoàng", "anh hoang", "sếp hoàng", "sep hoang", "giám đốc hoàng", "giam doc hoang", "giám đốc", "giam doc", "minh hoàng", "minh hoang"]
   },
   {
     id: "1794990772023",
@@ -42,9 +42,9 @@ const defaultCustomWishes = [
   {
     id: "1794990756374",
     name: "Phạm Đức Huy",
-    title: "Quý Ông Đa Năng & Nhiệt Huyết Bền Bỉ",
+    title: "Chuyên Gia QC & Người Gác Cổng Chất Lượng",
     wish: "Chúc Huy luôn vui vẻ, mạnh khỏe và gặp thật nhiều may mắn nhé! Chúc Huy công việc ngày càng thuận lợi, dù phải đảm nhận nhiều vai trò từ tester đến hỗ trợ vận hành nhưng vẫn luôn giữ được sự chăm chỉ và nhiệt tình như hiện tại. Đi làm xa cũng nhớ giữ gìn sức khỏe, đừng để bản thân quá vất vả nhé. Chúc chuyện tình cảm đang tìm hiểu sớm có kết quả tốt đẹp và mọi điều đều suôn sẻ!",
-    keywords: ["phạm đức huy", "pham duc huy", "huy", "đức huy", "duc huy", "anh huy"]
+    keywords: ["phạm đức huy", "pham duc huy", "huy", "đức huy", "duc huy", "anh huy", "qc huy", "huy qc", "tester huy"]
   },
   {
     id: "1794982956115",
